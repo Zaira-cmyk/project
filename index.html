@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Portfolio</title>
+
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+    <!-- Header -->
     <header>
         <nav>
             <h1 class="logo">My Portfolio</h1>
@@ -23,11 +25,12 @@
         </nav>
     </header>
 
-    <!-- Hero Section -->
+    <!-- Hero -->
     <section id="home" class="hero">
         <div class="hero-text">
             <h2>Hello, I'm Zaira</h2>
             <p>Aspiring Web Developer and Designer</p>
+
             <a href="#projects" class="btn">View My Work</a>
         </div>
     </section>
@@ -73,7 +76,7 @@
                 <h3>Library Management System</h3>
 
                 <p>
-                    A student and librarian system project with a dashboard and API integration.
+                    A student and librarian system project with dashboard and API integration.
                 </p>
             </div>
 
@@ -92,30 +95,40 @@
     <section id="recommendations" class="section">
         <h2>Recommendations</h2>
 
-        <div class="recommendation-form">
+        <div class="recommendation-container">
 
-            <input type="text" id="name" placeholder="Enter recommendation title">
+            <!-- Form -->
+            <div class="recommendation-form">
 
-            <textarea id="message" placeholder="Enter recommendation message"></textarea>
+                <h3>Add Recommendation</h3>
 
-            <button onclick="addRecommendation()">Add Recommendation</button>
+                <form id="recommendationForm">
 
-        </div>
+                    <input type="text" id="name" placeholder="Enter Name" required>
 
-        <div id="recommendation-list" class="recommendation-list">
+                    <textarea id="message" placeholder="Enter Recommendation" required></textarea>
 
-            <div class="recommendation-card">
-                <h3>Great Portfolio</h3>
+                    <button type="submit">Add Recommendation</button>
 
-                <p>
-                    This website is responsive and professionally designed.
-                </p>
+                </form>
+            </div>
 
-                <div class="card-buttons">
-                    <button class="edit-btn" onclick="editRecommendation(this)">Edit</button>
+            <!-- Cards -->
+            <div class="recommendation-list" id="recommendationList">
 
-                    <button class="delete-btn" onclick="deleteRecommendation(this)">Delete</button>
+                <div class="recommendation-card">
+                    <h3>John Doe</h3>
+
+                    <p>
+                        Zaira created a beautiful and responsive website project. Great job!
+                    </p>
+
+                    <div class="card-buttons">
+                        <button class="edit-btn">Edit</button>
+                        <button class="delete-btn">Delete</button>
+                    </div>
                 </div>
+
             </div>
 
         </div>
@@ -126,6 +139,7 @@
         <h2>Contact Me</h2>
 
         <p>Email: zaira@example.com</p>
+
         <p>GitHub: github.com/yourusername</p>
     </section>
 
@@ -136,64 +150,73 @@
 
     <!-- JavaScript -->
     <script>
+
+        const form = document.getElementById("recommendationForm");
+        const recommendationList = document.getElementById("recommendationList");
+
         let editCard = null;
 
-        function addRecommendation() {
+        form.addEventListener("submit", function(e) {
+
+            e.preventDefault();
 
             const name = document.getElementById("name").value;
             const message = document.getElementById("message").value;
 
-            if(name === "" || message === "") {
-                alert("Please fill in all fields.");
-                return;
-            }
+            if(editCard){
 
-            if(editCard) {
-
-                editCard.querySelector("h3").innerText = name;
-                editCard.querySelector("p").innerText = message;
+                editCard.querySelector("h3").textContent = name;
+                editCard.querySelector("p").textContent = message;
 
                 editCard = null;
 
             } else {
 
-                const card = document.createElement("div");
-                card.classList.add("recommendation-card");
-
-                card.innerHTML = `
-                    <h3>${name}</h3>
-                    <p>${message}</p>
-
-                    <div class="card-buttons">
-                        <button class="edit-btn" onclick="editRecommendation(this)">Edit</button>
-
-                        <button class="delete-btn" onclick="deleteRecommendation(this)">Delete</button>
-                    </div>
-                `;
-
-                document.getElementById("recommendation-list").appendChild(card);
+                addRecommendation(name, message);
             }
 
-            document.getElementById("name").value = "";
-            document.getElementById("message").value = "";
+            form.reset();
+        });
+
+        function addRecommendation(name, message){
+
+            const card = document.createElement("div");
+
+            card.classList.add("recommendation-card");
+
+            card.innerHTML = `
+                <h3>${name}</h3>
+
+                <p>${message}</p>
+
+                <div class="card-buttons">
+                    <button class="edit-btn">Edit</button>
+                    <button class="delete-btn">Delete</button>
+                </div>
+            `;
+
+            recommendationList.appendChild(card);
+
+            const editBtn = card.querySelector(".edit-btn");
+            const deleteBtn = card.querySelector(".delete-btn");
+
+            editBtn.addEventListener("click", function(){
+
+                document.getElementById("name").value =
+                card.querySelector("h3").textContent;
+
+                document.getElementById("message").value =
+                card.querySelector("p").textContent;
+
+                editCard = card;
+            });
+
+            deleteBtn.addEventListener("click", function(){
+
+                card.remove();
+            });
         }
 
-        function editRecommendation(button) {
-
-            const card = button.parentElement.parentElement;
-
-            const title = card.querySelector("h3").innerText;
-            const text = card.querySelector("p").innerText;
-
-            document.getElementById("name").value = title;
-            document.getElementById("message").value = text;
-
-            editCard = card;
-        }
-
-        function deleteRecommendation(button) {
-            button.parentElement.parentElement.remove();
-        }
     </script>
 
 </body>
